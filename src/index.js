@@ -21,7 +21,8 @@ const templates = {
   prodItem: document.querySelector('#prod-item').content,
   bgContainer: document.querySelector('#bg-container').content,
   bgContainerAuthorized: document.querySelector('#bg-container-authorized').content,
-  categoryContainer: document.querySelector('#category-container').content
+  categoryContainer: document.querySelector('#category-container').content,
+  prodDetail: document.querySelector('#prod-detail').content
 }
 
 const headerEl = document.querySelector('.header')
@@ -99,6 +100,7 @@ async function drawCategoryContainer() {
     })
   }
   categoryEvent(allEl)
+  categoryEvent(capEl, 'cap')
   categoryEvent(uniformEl, 'uniform')
   // 6. 템플릿을 문서에 삽입
   rootEl.appendChild(frag)
@@ -163,6 +165,18 @@ async function drawProdList(category) {
     prodItemTitleEl.textContent = prodItem.title
     prodItemPriceEl.textContent = prodItem.price
     // 5. 이벤트 리스너 등록하기
+    prodImgEl.addEventListener('click', async e => {
+      e.preventDefault()
+      drawProdDetail(prodItem.id)
+    })
+    prodItemTitleEl.addEventListener('click', async e => {
+      e.preventDefault()
+      drawProdDetail(prodItem.id)
+    })
+    prodItemPriceEl.addEventListener('click', async e => {
+      e.preventDefault()
+      drawProdDetail(prodItem.id)
+    })
     // 6. 템플릿을 문서에 삽입
     prodListEl.appendChild(frag)
   }
@@ -173,6 +187,55 @@ async function drawProdList(category) {
   rootEl.appendChild(frag)
 }
 
+async function drawProdDetail(prodId) {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.prodDetail, true)
+  // 2. 요소 선택
+  const buyFormEl = frag.querySelector('.prod-buy-form')
+  // 3. 필요한 데이터 불러오기
+  const {data: prodDetail} = await api.get(`/products?id=${prodId}&_embed=options`)
+  // 4. 내용 채우기
+  for(const itemDetail of prodDetail) {
+    const detailImgEl = frag.querySelector('.prod-detail-img')
+    const detailDescriptionEl = frag.querySelector('.prod-detail-description-img')
+    const detailTitleEl = buyFormEl.querySelector('.prod-detail-title')
+    const detailPriceEl = buyFormEl.querySelector('.prod-detail-price')
+    const prodQuanEl = frag.querySelector('.select-quantity')
+    const totalPriceEl = frag.querySelector('.total-price')
+    const minusQuanEl = frag.querySelector('.minus')
+    const plusQuanEl = frag.querySelector('.plus')
+
+    frag.querySelectorAll('.option').forEach((optionEl, index) => {
+      optionEl.textContent = itemDetail.options[index].title
+      optionEl.value = itemDetail.options[index].title
+    })
+    detailImgEl.src = itemDetail.mainImgUrl
+    detailDescriptionEl.src = itemDetail.detailImgUrls[0]
+    detailTitleEl.value = itemDetail.title
+    detailPriceEl.value = itemDetail.price + '원'
+    totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
+
+    minusQuanEl.addEventListener('click', e=> {
+      e.preventDefault()
+      if(parseInt(prodQuanEl.value) > 1) {
+        prodQuanEl.value = parseInt(prodQuanEl.value) - 1
+        totalPriceEl.textContent = itemDetail.price * parseInt(prodQuanEl.value)
+      } else {
+        alert('1보다 작은 수량을 입력할 수 없습니다.')
+      }
+    })
+    plusQuanEl.addEventListener('click', e => {
+      e.preventDefault()
+      prodQuanEl.value = parseInt(prodQuanEl.value) + 1
+      totalPriceEl.textContent = itemDetail.price * parseInt(prodQuanEl.value)
+    })
+  }
+  // 5. 이벤트 리스너 등록하기
+
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = ''
+  rootEl.appendChild(frag)
+}
 const token = localStorage.getItem('token')
 if(token) {
   drawBgContainerAuthorized()

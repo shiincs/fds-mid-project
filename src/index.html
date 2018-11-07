@@ -75,6 +75,49 @@
     </div>
   </template>
 
+  <template id="prod-detail">
+    <div class="prod-detail">
+      <div class="prod-detail-container">
+        <div class="prod-detail-img-container">
+          <img class="prod-detail-img" alt=""/>
+        </div>
+        <form class="prod-buy-form">
+          <input class="prod-detail-title" type="text" name="title" value="" readonly />
+          <input class="prod-detail-price" type="text" name="price" value="" readonly />
+          <div class="row">
+            <label for="option" class="label">옵션 선택</label>
+            <select name="option" id="select-option" class="select-option">
+              <option hidden>사이즈</option>
+              <option class="option"></option>
+              <option class="option"></option>
+              <option class="option"></option>
+            </select>
+          </div>
+          <div class="row">
+            <label for="select-quantity" class="label">수량 선택</label>
+            <div class="quan-container">
+              <button class="minus">-</button>
+              <input class="select-quantity" type="text" name="select-quantity" value="1" />
+              <button class="plus">+</button>
+            </div>
+          </div>
+          <div class="total-price-view">
+            <span class="total-price-title">총 상품금액</span>
+            <span class="total-price"></span>
+          </div>
+          <div class="buy-btn-container">
+            <button class="buy-btn">장바구니</button>
+            <button class="buy-btn red">바로구매</button>
+          </div>
+        </form>
+      </div>
+      <div class="divide-bar"></div>
+      <div class="prod-detail-description">
+          <img class="prod-detail-description-img" alt=""/>
+      </div>
+    </div>
+  </template>
+
   <!-- root area -->
   <header class="header"></header>
   <div class="root"></div>
