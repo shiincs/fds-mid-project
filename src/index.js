@@ -215,11 +215,20 @@ async function drawProdDetail(prodId) {
     detailPriceEl.value = itemDetail.price + '원'
     totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
 
-    minusQuanEl.addEventListener('click', e=> {
+    prodQuanEl.addEventListener('change', e => {
+      e.preventDefault()
+      if(parseInt(prodQuanEl.value) > 1) {
+        prodQuanEl.value = parseInt(prodQuanEl.value)
+        totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
+      } else {
+        alert('1보다 작은 수량을 입력할 수 없습니다.')
+      }
+    })
+    minusQuanEl.addEventListener('click', e => {
       e.preventDefault()
       if(parseInt(prodQuanEl.value) > 1) {
         prodQuanEl.value = parseInt(prodQuanEl.value) - 1
-        totalPriceEl.textContent = itemDetail.price * parseInt(prodQuanEl.value)
+        totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
       } else {
         alert('1보다 작은 수량을 입력할 수 없습니다.')
       }
@@ -227,7 +236,7 @@ async function drawProdDetail(prodId) {
     plusQuanEl.addEventListener('click', e => {
       e.preventDefault()
       prodQuanEl.value = parseInt(prodQuanEl.value) + 1
-      totalPriceEl.textContent = itemDetail.price * parseInt(prodQuanEl.value)
+      totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
     })
   }
   // 5. 이벤트 리스너 등록하기
