@@ -9,33 +9,74 @@
 </head>
 <body>
   <!-- 템플릿을 이곳에 작성해주세요 -->
+  <template id="bg-container">
+    <div class="bg-container">
+      <div class="bg-img">
+        <div class="btn-container">
+          <button class="login"></button>
+          <button class="register"></button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="bg-container-authorized">
+    <div class="bg-container-authorized">
+      <div class="bg-img">
+        <div class="btn-container">
+          <button class="logout"></button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="category-container">
+    <div class="category-container">
+      <button class="button all">전체</button>
+      <button class="button cap">모자</button>
+      <button class="button uniform">팀의류</button>
+      <button class="button marking">마킹키트</button>
+      <button class="button fashion">패션의류</button>
+      <button class="button cheer">응원용품</button>
+      <button class="button baseball">야구용품</button>
+      <button class="button etc">잡화</button>
+      <button class="button special">기획상품</button>
+    </div>
+  </template>
+
   <template id="login-form">
-    <h1 class="login-title">로그인</h1>
+
     <form class="login-form">
-      <input type="text" name="username">
-      <input type="password" name="password">
-      <button class="login-button">로그인</button>
+      <h1 class="login-title">로그인</h1>
+      <div class="input-container">
+        <input class="input" type="text" name="username" placeholder="아이디" required>
+        <input class="input" type="password" name="password" placeholder="비밀번호" required>
+        <button class="login-button">로그인</button>
+      </div>
     </form>
   </template>
 
-  <template class="prod-list">
+  <template id="prod-list">
     <h1 class="list-title">상품 목록</h1>
     <div class="prod-list">
 
     </div>
   </template>
 
-  <!-- root area -->
-  <header class="header">
-    <div class="bg-container">
-      <div class="bg-img">
-          <div class="btn-container">
-            <button class="login">로그인</button>
-            <button class="register">회원가입</button>
-          </div>
+  <template id="prod-item">
+    <div class="prod-item">
+      <div class="prod-img-container">
+        <img src="#" alt="" class="prod-img">
       </div>
+      <dl class="prod-item-info">
+        <dt class="prod-item-title"></dt>
+        <dd class="prod-item-price"></dd>
+      </dl>
     </div>
-  </header>
+  </template>
+
+  <!-- root area -->
+  <header class="header"></header>
   <div class="root"></div>
   <script src="./index.js"></script>
 </body>

@@ -23,7 +23,7 @@
 }
 
 // $main-color: #531628;
-$main-color: skyblue;
+$main-color: #fff;
 $main-text-color: #fff;
 
 html {
@@ -42,9 +42,10 @@ body {
   display: block
 }
 
-// root area
+// content
 .header {
-  .bg-container {
+  .bg-container,
+  .bg-container-authorized {
     position: relative;
     width: 100%;
     height: 280px;
@@ -65,22 +66,98 @@ body {
         position: absolute;
         top: 2%;
         left: 15%;
-        .login, .register {
+        .login, .register, .logout {
           font-size: 17px;
           background-color: transparent;
           color: $main-text-color;
           padding: 5px 0;
           margin-right: 10px;
           outline: none;
+          cursor: pointer;
         }
-        .login:hover, .register:hover {
+        .login:hover, .register:hover, .logout:hover {
           border-bottom: 1px solid $main-text-color;
         }
       }
     }
   }
 }
+
+// login page
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid red;
+  width: 50%;
+  margin: 0 auto;
+  .login-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .input-container {
+    border: 1px solid #000;
+    .input {
+      border: 1px solid #ccc;
+      width: 100%;
+      height: 50px;
+      padding: 10px;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    .login-button {
+      width: 100%;
+      height: 40px;
+      background-color: #600f1e;
+      color: #fff;
+      font-size: 20px;
+    }
+  }
+}
+
+// prod-list page
+.prod-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 3%;
+  width: 100%;
+  .prod-item {
+    width: 100%;
+    margin-bottom: 10%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .prod-img-container {
+    height: 330px;
+      .prod-img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .prod-item-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}
+
+// root page
 .root {
   border: 1px solid #000;
-  margin: 0 10%;
+  width: 70%;
+  margin: 2% auto 5% auto;
+  .category-container {
+    margin-bottom: 15px;
+    border: 1px solid #000;
+    .button {
+      cursor: pointer;
+      outline: none;
+      font-size: 17px;
+      padding: 5px 10px;
+      background-color: #600f1e;
+      color: #fff;
+    }
+  }
 }
