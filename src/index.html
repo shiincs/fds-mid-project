@@ -9,7 +9,33 @@
 </head>
 <body>
   <!-- 템플릿을 이곳에 작성해주세요 -->
+  <template id="login-form">
+    <h1 class="login-title">로그인</h1>
+    <form class="login-form">
+      <input type="text" name="username">
+      <input type="password" name="password">
+      <button class="login-button">로그인</button>
+    </form>
+  </template>
 
+  <template class="prod-list">
+    <h1 class="list-title">상품 목록</h1>
+    <div class="prod-list">
+
+    </div>
+  </template>
+
+  <!-- root area -->
+  <header class="header">
+    <div class="bg-container">
+      <div class="bg-img">
+          <div class="btn-container">
+            <button class="login">로그인</button>
+            <button class="register">회원가입</button>
+          </div>
+      </div>
+    </div>
+  </header>
   <div class="root"></div>
   <script src="./index.js"></script>
 </body>

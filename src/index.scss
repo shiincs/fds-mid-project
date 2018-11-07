@@ -1,5 +1,86 @@
+@charset "utf-8";
+
+/* ===============
+    CSS RESET
+================= */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+}
+
+.readable-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  z-index: 10;
+}
+
+// $main-color: #531628;
 $main-color: skyblue;
+$main-text-color: #fff;
+
+html {
+  font-size: 10px;
+}
 
 body {
   background-color: $main-color;
+  font-size: 14px;
+  font-family:'Lato', 'Noto Sans KR', sans-serif;
+}
+
+.clearfix::after {
+  content: '';
+  clear: both;
+  display: block
+}
+
+// root area
+.header {
+  .bg-container {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    .bg-img {
+      background-color: $main-color;
+      background-image: url("http://ticketimage.interpark.com/TCMS3.0/MDSho/1780002001/1803/180319032152_20180319032152.gif");
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      /* background-size: 100% 100%; 배경 이미지를 영역 안에 채우기 위해 크기를 줄이거나 늘린다. */
+      /* background-size: cover; 배경 영역을 채우고 나머지는 잘라낸다. */
+      /* background-size: contain; 이미지를 배경 영역 안에 온전히 채운다. */
+      background-size: contain;
+      width: 100%;
+      height: 100%;
+      // padding-top: 18%; /* 부모(.rwd-container) 크기(width)의 50% 만큼 차지한다. */
+      // transition: all 2s;
+      .btn-container {
+        position: absolute;
+        top: 2%;
+        left: 15%;
+        .login, .register {
+          font-size: 17px;
+          background-color: transparent;
+          color: $main-text-color;
+          padding: 5px 0;
+          margin-right: 10px;
+          outline: none;
+        }
+        .login:hover, .register:hover {
+          border-bottom: 1px solid $main-text-color;
+        }
+      }
+    }
+  }
+}
+.root {
+  border: 1px solid #000;
+  margin: 0 10%;
 }
