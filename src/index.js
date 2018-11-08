@@ -322,6 +322,7 @@ async function drawBucketList() {
     const bucketPriceSumEl = frag.querySelector('.bucket-price-sum')
     const bucketQuantityEl = frag.querySelector('.bucket-quantity')
     const deleteCellEl = frag.querySelector('.delete-cell')
+
     const product = prodList.find(prodItem => prodItem.id === cartItem.option.productId)
 
     bucketImgEl.src = product.mainImgUrl
@@ -385,28 +386,50 @@ async function drawOrderList(orderId) {
   const orderListEl = frag.querySelector('.order-list')
   // 3. 필요한 데이터 불러오기
   // cartItems와 연결된 orders에 get 요청을 보내서 orders 데이터를 받아온다.
-  const {data: { orders : cartItems, orderTime, userId, id}} = await api.get('/orders', {
+  const {data: {cartItems, orderTime}} = await api.get(`/orders/${orderId}`, {
     params: {
-      id: orderId,
       _embed: 'cartItems'
     }
   })
+
   console.log(cartItems)
   console.log(orderTime)
-  console.log(userId)
-  console.log(id)
+
+  const params = new URLSearchParams()
+  cartItems.forEach(cartItem => params.append('id', cartItem.optionId))
+  params.append('_expand', 'product')
+
+  const { data: optionList } = await api.get('/options', {
+    params
+  })
+  console.log(optionList)
 
   // 4. 내용 채우기
-  cartItems.forEach((cartItem) => {
-    // console.log(cartItem.cartItems)
+  for(const cartItem of cartItems) {
+    console.log(cartItem)
+    // 1. 템플릿 복사
     const frag = document.importNode(templates.orderItem, true)
-
+    // 2. 요소 선택
+    const orderDateEl = frag.querySelector('.order-date')
+    const orderImgEl = frag.querySelector('.order-img')
+    const orderTitleEl = frag.querySelector('.order-title')
+    const orderOptionEl = frag.querySelector('.order-option')
     const orderQuantityEl = frag.querySelector('.order-quantity')
+    const orderPriceSumEl = frag.querySelector('.order-price-sum')
+    // 3. 필요한 데이터 불러오기
+    // 4. 내용 채우기
+    const option = optionList.find(item => item.id === cartItem.optionId)
+    console.log(option)
 
-    orderQuantityEl.textContent = cartItem.cartItems.quantity
-
+    orderDateEl.textContent = orderTime
+    orderImgEl.src = option.product.mainImgUrl
+    orderOptionEl.textContent = option.title
+    orderTitleEl.textContent = option.product.title
+    orderQuantityEl.textContent = cartItem.quantity
+    orderPriceSumEl.textContent = (option.product.price * cartItem.quantity).toLocaleString() + '원'
+    // 6.템플릿을 문서에 삽입
     orderListEl.appendChild(frag)
-  })
+  }
 
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
