@@ -44,10 +44,32 @@ body {
 
 // content
 .header {
-  .header-header {
-    position: absolute;
-    z-index: 200;
+  .nav,
+  .nav-authorized {
+    position: relative;
+    z-index: 100;
+    width: 1024px;
+    margin: 0 auto;
+    .btn-container {
+      display: flex;
+      position: absolute;
+      top: 5px;
+      list-style: none;
+      .login, .register, .logout {
+        font-size: 17px;
+        background-color: transparent;
+        color: $main-text-color;
+        padding: 5px 0;
+        margin-right: 10px;
+        outline: none;
+        cursor: pointer;
+      }
+      .login:hover, .register:hover, .logout:hover {
+        border-bottom: 1px solid $main-text-color;
+      }
+    }
   }
+
   .bg-container,
   .bg-container-authorized {
     position: relative;
@@ -65,23 +87,6 @@ body {
       height: 280px;
       // padding-top: 18%; /* 부모(.rwd-container) 크기(width)의 50% 만큼 차지한다. */
       // transition: all 2s;
-      .btn-container {
-        position: absolute;
-        top: 2%;
-        left: 15%;
-        .login, .register, .logout {
-          font-size: 17px;
-          background-color: transparent;
-          color: $main-text-color;
-          padding: 5px 0;
-          margin-right: 10px;
-          outline: none;
-          cursor: pointer;
-        }
-        .login:hover, .register:hover, .logout:hover {
-          border-bottom: 1px solid $main-text-color;
-        }
-      }
     }
   }
 }
@@ -119,6 +124,21 @@ body {
 }
 
 // prod-list page
+.category-container {
+  margin-bottom: 15px;
+  border: 1px solid #000;
+  list-style: none;
+  display: flex;
+  .button {
+    cursor: pointer;
+    outline: none;
+    font-size: 17px;
+    padding: 5px 10px;
+    background-color: #600f1e;
+    color: #fff;
+    margin-right: 10px;
+  }
+}
 .prod-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -228,6 +248,7 @@ body {
       .buy-btn-container {
         margin-top: 40px;
         width: 100%;
+        .bucket-btn,
         .buy-btn {
           display: inline-block;
           width: 49%;
@@ -237,7 +258,7 @@ body {
           background-color: #fff;
           border: 1px solid #000;
         }
-        .buy-btn.red {
+        .buy-btn {
           background-color: red;
           color: $main-text-color;
           border: 0;
@@ -260,22 +281,99 @@ body {
   }
 }
 
-
+.bucket-head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr 2fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
+  column-gap: 0;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  border: 1px solid #ccc;
+  padding: 10px 0;
+  .cell {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+.total-price-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  margin-top: 20px;
+  .total-price-title {
+    font-size: 15px;
+    margin-right: 20px;
+  }
+  .total-price {
+    font-size: 30px;
+    font-weight: 600;
+  }
+}
+.buy-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  .all-buy-btn {
+    width: 150px;
+    height: 50px;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .all-buy-btn {
+    background-color: red;
+    color: $main-text-color;
+    border: 1px solid #ccc;
+  }
+}
+.bucket-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr 2fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
+  column-gap: 0;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  border: 1px solid #ccc;
+  .cell {
+    text-align: center;
+    font-size: 18px;
+  }
+  .bucket-img {
+    width: 70px;
+  }
+  .bucket-item-check {
+    width: 17px;
+    height: 17px;
+  }
+  .delete-cell {
+    cursor: pointer;
+    width: 40px;
+    height: 35px;
+    font-size: 15px;
+    background-color: transparent;
+  }
+  .delete-cell:hover {
+    color: red;
+  }
+}
+.order-list {
+  .order-head,
+  .order-item {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr 1fr 1fr;
+    border: 1px solid black;
+    .cell {
+      border: 1px solid black;
+      text-align: center;
+    }
+  }
+}
 // root page
 .root {
   border: 1px solid #000;
   width: 1024px;
-  margin: 0 auto;
-  .category-container {
-    margin-bottom: 15px;
-    border: 1px solid #000;
-    .button {
-      cursor: pointer;
-      outline: none;
-      font-size: 17px;
-      padding: 5px 10px;
-      background-color: #600f1e;
-      color: #fff;
-    }
-  }
+  margin: 50px auto;
 }

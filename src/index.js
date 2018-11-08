@@ -22,7 +22,11 @@ const templates = {
   bgContainer: document.querySelector('#bg-container').content,
   bgContainerAuthorized: document.querySelector('#bg-container-authorized').content,
   categoryContainer: document.querySelector('#category-container').content,
-  prodDetail: document.querySelector('#prod-detail').content
+  prodDetail: document.querySelector('#prod-detail').content,
+  bucketList: document.querySelector('#bucket-list').content,
+  bucketItem: document.querySelector('#bucket-item').content,
+  orderList: document.querySelector('#order-list').content,
+  orderItem: document.querySelector('#order-item').content
 }
 
 const headerEl = document.querySelector('.header')
@@ -200,26 +204,29 @@ async function drawProdDetail(prodId) {
     const detailDescriptionEl = frag.querySelector('.prod-detail-description-img')
     const detailTitleEl = buyFormEl.querySelector('.prod-detail-title')
     const detailPriceEl = buyFormEl.querySelector('.prod-detail-price')
+    const selectOptionEl = buyFormEl.querySelector('.select-option')
     const prodQuanEl = frag.querySelector('.select-quantity')
     const totalPriceEl = frag.querySelector('.total-price')
     const minusQuanEl = frag.querySelector('.minus')
     const plusQuanEl = frag.querySelector('.plus')
+    const bucketButtonEl = frag.querySelector('.bucket-btn')
+    const buyButtonEl = frag.querySelector('.buy-btn')
 
     frag.querySelectorAll('.option').forEach((optionEl, index) => {
       optionEl.textContent = itemDetail.options[index].title
-      optionEl.value = itemDetail.options[index].title
+      optionEl.value = itemDetail.options[index].id
     })
     detailImgEl.src = itemDetail.mainImgUrl
     detailDescriptionEl.src = itemDetail.detailImgUrls[0]
     detailTitleEl.value = itemDetail.title
-    detailPriceEl.value = itemDetail.price + '원'
-    totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
+    detailPriceEl.value = itemDetail.price.toLocaleString() + '원'
+    totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value).toLocaleString() + '원'
 
     prodQuanEl.addEventListener('change', e => {
       e.preventDefault()
       if(parseInt(prodQuanEl.value) > 1) {
         prodQuanEl.value = parseInt(prodQuanEl.value)
-        totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
+        totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value).toLocaleString() + '원'
       } else {
         alert('1보다 작은 수량을 입력할 수 없습니다.')
       }
@@ -228,7 +235,7 @@ async function drawProdDetail(prodId) {
       e.preventDefault()
       if(parseInt(prodQuanEl.value) > 1) {
         prodQuanEl.value = parseInt(prodQuanEl.value) - 1
-        totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
+        totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value).toLocaleString() + '원'
       } else {
         alert('1보다 작은 수량을 입력할 수 없습니다.')
       }
@@ -236,7 +243,39 @@ async function drawProdDetail(prodId) {
     plusQuanEl.addEventListener('click', e => {
       e.preventDefault()
       prodQuanEl.value = parseInt(prodQuanEl.value) + 1
-      totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value) + '원'
+      totalPriceEl.textContent = (itemDetail.price * prodQuanEl.value).toLocaleString() + '원'
+    })
+
+    bucketButtonEl.addEventListener('click', async e => {
+      e.preventDefault()
+      const {data: cartItem} = await api.get('/cartItems')
+      if(cartItem.length !== 0) {
+        for(let i=0; i < cartItem.length; i++) {
+          if(cartItem[i].optionId === parseInt(selectOptionEl.value)) {
+            if(confirm('선택하신 상품은 이미 장바구니에 있습니다. 장바구니로 이동하시겠습니까?')) {
+              drawBucketList()
+            } else {
+              break
+            }
+          } else {
+            const res = await api.post('/cartItems', {
+              optionId: parseInt(selectOptionEl.value),
+              quantity: parseInt(prodQuanEl.value),
+              ordered: false
+            })
+            drawBucketList()
+          }
+          break
+        }
+      } else {
+        const res = await api.post('/cartItems', {
+          optionId: parseInt(selectOptionEl.value),
+          quantity: parseInt(prodQuanEl.value),
+          ordered: false
+        })
+        drawBucketList()
+      }
+
     })
   }
   // 5. 이벤트 리스너 등록하기
@@ -245,6 +284,136 @@ async function drawProdDetail(prodId) {
   rootEl.textContent = ''
   rootEl.appendChild(frag)
 }
+
+async function drawBucketList() {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.bucketList, true)
+  // 2. 요소 선택
+  const bucketListEl = frag.querySelector('.bucket-list')
+  const totalPriceEl = frag.querySelector('.total-price')
+  const orderButtonEl = frag.querySelector('.all-buy-btn')
+  // 3. 필요한 데이터 불러오기
+  const {data: cartItems} = await api.get('/cartItems', {
+    params: {
+      ordered: false,
+      _expand: 'option'
+    }
+  })
+
+  const params = new URLSearchParams()
+  cartItems.forEach(item => {
+    params.append('id', item.option.productId)
+  })
+  const {data: prodList} = await api.get('/products?_embed=options', {
+    params
+  })
+
+  // 총 상품금액 계산용
+  let totalPrice = 0
+
+  // 4. 내용 채우기
+  cartItems.forEach((cartItem, index, array) => {
+    const frag = document.importNode(templates.bucketItem, true)
+
+    const bucketImgEl = frag.querySelector('.bucket-img')
+    const bucketTitleEl = frag.querySelector('.bucket-title')
+    const bucketOptionEl = frag.querySelector('.bucket-option')
+    const bucketPriceEl = frag.querySelector('.bucket-price')
+    const bucketPriceSumEl = frag.querySelector('.bucket-price-sum')
+    const bucketQuantityEl = frag.querySelector('.bucket-quantity')
+    const deleteCellEl = frag.querySelector('.delete-cell')
+    const product = prodList.find(prodItem => prodItem.id === cartItem.option.productId)
+
+    bucketImgEl.src = product.mainImgUrl
+    bucketTitleEl.textContent = product.title
+    bucketOptionEl.textContent = cartItem.option.title
+    bucketQuantityEl.textContent = cartItem.quantity
+    bucketPriceEl.textContent = product.price.toLocaleString() + '원'
+    bucketPriceSumEl.textContent = (cartItem.quantity * product.price).toLocaleString() + '원'
+    totalPrice += (cartItem.quantity * product.price)
+
+    deleteCellEl.addEventListener('click', async e => {
+      if(confirm('정말 삭제하시겠습니까?')) {
+        const res = await api.delete(`/cartItems/${cartItem.id}`)
+        drawBucketList()
+      }
+    })
+    bucketListEl.appendChild(frag)
+  })
+  // 최종 결제금액 채우기
+  totalPriceEl.textContent = totalPrice.toLocaleString() + '원'
+
+  // 5. 이벤트 리스너 등록하기
+  // 장바구니에서 주문 버튼 클릭 하면
+  orderButtonEl.addEventListener('click', async e => {
+    // '주문' 객체를 먼저 만들고 나서
+    const {data: {id: orderId}} = await api.post('/orders', {
+      orderTime: Date.now() // 현재 시각을 나타내는 정수
+    })
+
+    // parameter 저장을 위해 URLSearchParams를 만든다.
+    const params = new URLSearchParams();
+    // 위에서 장바구니에 get 요청을 보내 받아온 장바구니의 각 항목의 id를 params에 저장해준다.
+    cartItems.forEach(cartItem => params.append('id', cartItem.id))
+
+    // 장바구니의 주문되지 않은 모든 항목의 id를 파라미터로 장바구니에 get 요청을 보내서 장바구니 데이터를 받아온다.
+    const {data: cartOrderItem} = await api.get('/cartItems', {
+      params
+    })
+
+    // 위에서 만든 주문 객체의 id를 장바구니 항목의 orderId에 넣어서 orders와 cartItems를 연결시키고,
+    //  ordered 값을 true로 바꾼다.
+    for(const orderItem of cartOrderItem) {
+      await api.patch(`/cartItems/${orderItem.id}`, {
+        ordered: true,
+        orderId
+      })
+    }
+    // orderId를 인자로 넣어서 주문내역을 그리는 함수를 실행한다.
+    drawOrderList(orderId)
+  })
+
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = ''
+  rootEl.appendChild(frag)
+}
+
+async function drawOrderList(orderId) {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.orderList, true)
+  // 2. 요소 선택
+  const orderListEl = frag.querySelector('.order-list')
+  // 3. 필요한 데이터 불러오기
+  // cartItems와 연결된 orders에 get 요청을 보내서 orders 데이터를 받아온다.
+  const {data: { orders : cartItems, orderTime, userId, id}} = await api.get('/orders', {
+    params: {
+      id: orderId,
+      _embed: 'cartItems'
+    }
+  })
+  console.log(cartItems)
+  console.log(orderTime)
+  console.log(userId)
+  console.log(id)
+
+  // 4. 내용 채우기
+  cartItems.forEach((cartItem) => {
+    // console.log(cartItem.cartItems)
+    const frag = document.importNode(templates.orderItem, true)
+
+    const orderQuantityEl = frag.querySelector('.order-quantity')
+
+    orderQuantityEl.textContent = cartItem.cartItems.quantity
+
+    orderListEl.appendChild(frag)
+  })
+
+  // 5. 이벤트 리스너 등록하기
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = ''
+  rootEl.appendChild(frag)
+}
+
 const token = localStorage.getItem('token')
 if(token) {
   drawBgContainerAuthorized()

@@ -10,39 +10,42 @@
 <body>
   <!-- 템플릿을 이곳에 작성해주세요 -->
   <template id="bg-container">
+    <nav class="nav">
+      <ul class="btn-container">
+        <li class="login"></li>
+        <li class="register"></li>
+      </ul>
+    </nav>
     <div class="bg-container">
       <div class="bg-img">
-        <div class="btn-container">
-          <button class="login"></button>
-          <button class="register"></button>
-        </div>
       </div>
     </div>
   </template>
 
   <template id="bg-container-authorized">
-    <div class="header-header" style="background-color: transparent; color: white;">히히히</div>
+    <nav class="nav-authorized">
+      <ul class="btn-container">
+        <li class="logout"></li>
+      </ul>
+    </nav>
     <div class="bg-container-authorized">
       <div class="bg-img">
-        <div class="btn-container">
-          <button class="logout"></button>
-        </div>
       </div>
     </div>
   </template>
 
   <template id="category-container">
-    <div class="category-container">
-      <button class="button all">전체</button>
-      <button class="button cap">모자</button>
-      <button class="button uniform">팀의류</button>
-      <button class="button marking">마킹키트</button>
-      <button class="button fashion">패션의류</button>
-      <button class="button cheer">응원용품</button>
-      <button class="button baseball">야구용품</button>
-      <button class="button etc">잡화</button>
-      <button class="button special">기획상품</button>
-    </div>
+    <ul class="category-container">
+      <li class="button all">전체</li>
+      <li class="button cap">모자</li>
+      <li class="button uniform">팀의류</li>
+      <li class="button marking">마킹키트</li>
+      <li class="button fashion">패션의류</li>
+      <li class="button cheer">응원용품</li>
+      <li class="button baseball">야구용품</li>
+      <li class="button etc">잡화</li>
+      <li class="button special">기획상품</li>
+    </ul>
   </template>
 
   <template id="login-form">
@@ -86,8 +89,8 @@
           <input class="prod-detail-price" type="text" name="price" value="" readonly />
           <div class="row">
             <label for="option" class="label">옵션 선택</label>
-            <select name="option" id="select-option" class="select-option">
-              <option hidden>사이즈</option>
+            <select name="option" id="select-option" class="select-option" required>
+              <option value="" disabled selected>사이즈</option>
               <option class="option"></option>
               <option class="option"></option>
               <option class="option"></option>
@@ -106,8 +109,8 @@
             <span class="total-price"></span>
           </div>
           <div class="buy-btn-container">
-            <button class="buy-btn">장바구니</button>
-            <button class="buy-btn red">바로구매</button>
+            <button class="bucket-btn">장바구니</button>
+            <button class="buy-btn">바로구매</button>
           </div>
         </form>
       </div>
@@ -118,9 +121,81 @@
     </div>
   </template>
 
+  <template id="bucket-list">
+    <h1 class="bucket-title">장바구니 목록</h1>
+    <div class="bucket-list">
+      <ul class="bucket-head">
+        <li class="cell">선택</li>
+        <li class="cell"></li>
+        <li class="cell">상품명</li>
+        <li class="cell">옵션</li>
+        <li class="cell">가격</li>
+        <li class="cell">수량</li>
+        <li class="cell">소계</li>
+          <li class="cell">삭제</li>
+        </ul>
+    </div>
+    <dl class="total-price-container">
+      <dt class="total-price-title">최종 결제금액</dt>
+      <dd class="total-price"></dd>
+    </dl>
+    <div class="buy-btn-container">
+      <!-- <button class="select-buy-btn">선택한 상품만 구매</button> -->
+      <button class="all-buy-btn">주문 결제</button>
+    </div>
+  </template>
+
+  <template id="bucket-item">
+    <ul class="bucket-item">
+      <li class="cell">
+        <input class="bucket-item-check" type="checkbox" name="" id="" checked>
+      </li>
+      <li class="cell">
+        <img alt="" class="bucket-img">
+      </li>
+      <li class="cell bucket-title"></li>
+      <li class="cell bucket-option"></li>
+      <li class="cell bucket-price"></li>
+      <li class="cell bucket-quantity"></li>
+      <li class="cell bucket-price-sum"></li>
+      <li class="cell">
+        <button class="delete-cell">삭제</button>
+      </li>
+    </ul>
+  </template>
+
+  <template id="order-list">
+    <h1 class="order-title">주문 내역</h1>
+    <div class="order-list">
+      <ul class="order-head">
+        <li class="cell">주문일</li>
+        <li class="cell"></li>
+        <li class="cell">상품명</li>
+        <li class="cell">옵션</li>
+        <li class="cell">수량</li>
+        <li class="cell">결제금액</li>
+      </ul>
+    </div>
+  </template>
+
+  <template id="order-item">
+    <ul class="order-item">
+      <li class="cell order-date"></li>
+      <li class="cell">
+        <img alt="" class="order-img">
+      </li>
+      <li class="cell order-title"></li>
+      <li class="cell order-option"></li>
+      <li class="cell order-quantity"></li>
+      <li class="cell order-price-sum"></li>
+    </ul>
+  </template>
+
   <!-- root area -->
   <header class="header"></header>
-  <div class="root"></div>
+  <div class="root">
+
+  </div>
   <script src="./index.js"></script>
 </body>
 </html>
