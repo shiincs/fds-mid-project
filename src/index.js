@@ -17,6 +17,7 @@ api.interceptors.request.use(function (config) {
 
 const templates = {
   loginForm: document.querySelector('#login-form').content,
+  registerForm: document.querySelector('#register-form').content,
   prodList: document.querySelector('#prod-list').content,
   prodItem: document.querySelector('#prod-item').content,
   bgContainer: document.querySelector('#bg-container').content,
@@ -45,6 +46,7 @@ async function drawBgContainer() {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.bgContainer, true)
   // 2. 요소 선택
+  const bgImgEl = frag.querySelector('.bg-img')
   const loginButtonEl = frag.querySelector('.login')
   const registerButtonEl = frag.querySelector('.register')
   // 3. 필요한 데이터 불러오기
@@ -52,9 +54,16 @@ async function drawBgContainer() {
   loginButtonEl.textContent = '로그인'
   registerButtonEl.textContent = '회원가입'
   // 5. 이벤트 리스너 등록하기
+  bgImgEl.addEventListener('click', e => {
+    drawProdList()
+  })
   loginButtonEl.addEventListener('click', e => {
     e.preventDefault()
     drawLoginForm()
+  })
+  registerButtonEl.addEventListener('click', e => {
+    e.preventDefault()
+    drawRegisterForm()
   })
   // 6. 템플릿을 문서에 삽입
   headerEl.textContent = ''
@@ -119,10 +128,17 @@ async function drawLoginForm() {
   const frag = document.importNode(templates.loginForm, true)
   // 2. 요소 선택
   const loginFormEl = frag.querySelector('.login-form')
+  const registerBtnEl = frag.querySelector('.register-button')
   const pageMoveBtnEl = document.querySelector('.page-move-btn')
   // 3. 필요한 데이터 불러오기
   // 4. 내용 채우기
   // 5. 이벤트 리스너 등록하기
+  // 회원가입 버튼 클릭했을 때
+  registerBtnEl.addEventListener('click', e => {
+    e.preventDefault()
+    drawRegisterForm()
+  })
+  // 로그인하기 버튼 클릭했을 때
   loginFormEl.addEventListener('submit', async e => {
     e.preventDefault()
     const username = e.target.elements.username.value
@@ -137,6 +153,58 @@ async function drawLoginForm() {
     drawBgContainerAuthorized()
     drawProdList()
     document.querySelector('.page-move-btn').classList.remove('hidden')
+  })
+  // 페이지 이동 버튼 영역에 hidden 클래스 추가(감추기)
+  pageMoveBtnEl.classList.add('hidden')
+  // 6. 템플릿을 문서에 삽입
+  rootEl.textContent = ''
+  rootEl.appendChild(frag)
+}
+
+async function drawRegisterForm() {
+  // 1. 템플릿 복사
+  const frag = document.importNode(templates.registerForm, true)
+  // 2. 요소 선택
+  const registerFormEl = frag.querySelector('.register-form')
+  const usernameEl = frag.querySelector('.username')
+  const pwConfirmEl = registerFormEl.querySelector('.pw-confirm')
+  const pageMoveBtnEl = document.querySelector('.page-move-btn')
+  // 3. 필요한 데이터 불러오기
+  // username validation을 위해 users 데이터를 불러온다.
+  const {data: userList} = await api.get('/users')
+  // 4. 내용 채우기
+  // 5. 이벤트 리스너 등록하기
+  usernameEl.addEventListener('blur', e => {
+    userList.forEach(userItem => {
+      if(userItem.username === e.target.value) {
+        e.target.value = ''
+        alert('이미 존재하는 이름입니다.')
+      }
+    })
+  })
+  pwConfirmEl.addEventListener('blur', e => {
+    const password = registerFormEl.elements.password.value
+    const passwordConfirm = e.target.value
+    if(password !== passwordConfirm) {
+      e.target.value = ''
+      alert('비밀번호를 다시 입력해주세요.')
+    }
+  })
+  registerFormEl.addEventListener('submit', async e => {
+    e.preventDefault()
+    const username = e.target.elements.username.value
+    const password = e.target.elements.password.value
+
+    const res = await api.post('/users/register', {
+      username,
+      password
+    })
+    localStorage.setItem('token', res.data.token)
+    alert('회원가입이 완료되었습니다. \n로그인 해주세요.')
+    // login test
+    rootEl.textContent = ''
+    drawBgContainerAuthorized()
+    drawLoginForm()
   })
   // 페이지 이동 버튼 영역에 hidden 클래스 추가(감추기)
   pageMoveBtnEl.classList.add('hidden')
