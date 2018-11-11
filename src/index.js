@@ -42,7 +42,7 @@ const historyBtnEl = document.querySelector('.history-btn')
 // 5. 이벤트 리스너 등록하기
 // 6. 템플릿을 문서에 삽입
 
-async function drawBgContainer() {
+function drawBgContainer() {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.bgContainer, true)
   // 2. 요소 선택
@@ -70,7 +70,7 @@ async function drawBgContainer() {
   headerEl.appendChild(frag)
 }
 
-async function drawBgContainerAuthorized() {
+function drawBgContainerAuthorized() {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.bgContainerAuthorized, true)
   // 2. 요소 선택
@@ -95,7 +95,7 @@ async function drawBgContainerAuthorized() {
   headerEl.appendChild(frag)
 }
 
-async function drawCategoryContainer() {
+function drawCategoryContainer() {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.categoryContainer, true)
   // 2. 요소 선택
@@ -113,6 +113,7 @@ async function drawCategoryContainer() {
   // 5. 이벤트 리스너 등록하기
   function categoryEvent(el, category='') {
     el.addEventListener('click', e => {
+      document.body.classList.add('loading')
       drawProdList(category)
     })
   }
@@ -141,18 +142,21 @@ async function drawLoginForm() {
   // 로그인하기 버튼 클릭했을 때
   loginFormEl.addEventListener('submit', async e => {
     e.preventDefault()
+    document.body.classList.add('loading')
     const username = e.target.elements.username.value
     const password = e.target.elements.password.value
+
     const res = await api.post('/users/login', {
       username,
       password
     })
     localStorage.setItem('token', res.data.token)
-    // login test
+
     rootEl.textContent = ''
     drawBgContainerAuthorized()
     drawProdList()
     document.querySelector('.page-move-btn').classList.remove('hidden')
+    document.body.classList.remove('loading')
   })
   // 페이지 이동 버튼 영역에 hidden 클래스 추가(감추기)
   pageMoveBtnEl.classList.add('hidden')
@@ -192,6 +196,7 @@ async function drawRegisterForm() {
   })
   registerFormEl.addEventListener('submit', async e => {
     e.preventDefault()
+    document.body.classList.add('loading')
     const username = e.target.elements.username.value
     const password = e.target.elements.password.value
 
@@ -200,11 +205,12 @@ async function drawRegisterForm() {
       password
     })
     localStorage.setItem('token', res.data.token)
-    alert('회원가입이 완료되었습니다. \n로그인 해주세요.')
+    alert('회원가입이 완료되었습니다.')
     // login test
     rootEl.textContent = ''
     drawBgContainerAuthorized()
-    drawLoginForm()
+    drawProdList()
+    document.body.classList.remove('loading')
   })
   // 페이지 이동 버튼 영역에 hidden 클래스 추가(감추기)
   pageMoveBtnEl.classList.add('hidden')
@@ -226,6 +232,7 @@ async function drawProdList(category) {
     params.append('category', category)
   }
   // 파라미터를 이용해 상품 목록을 받아온다.
+  document.body.classList.add('loading')
   const {data: prodList} = await api.get('/products', {
     params
   })
@@ -236,6 +243,7 @@ async function drawProdList(category) {
     const frag = document.importNode(templates.prodItem, true)
     // 2. 요소 선택
     const prodImgEl = frag.querySelector('.prod-img')
+    const prodItemEl = frag.querySelector('.prod-item')
     const prodItemTitleEl = frag.querySelector('.prod-item-title')
     const prodItemPriceEl = frag.querySelector('.prod-item-price')
     // 3. 필요한 데이터 불러오기
@@ -244,15 +252,8 @@ async function drawProdList(category) {
     prodItemTitleEl.textContent = prodItem.title
     prodItemPriceEl.textContent = (prodItem.price).toLocaleString() + '원'
     // 5. 이벤트 리스너 등록하기
-    prodImgEl.addEventListener('click', async e => {
-      e.preventDefault()
-      drawProdDetail(prodItem.id)
-    })
-    prodItemTitleEl.addEventListener('click', async e => {
-      e.preventDefault()
-      drawProdDetail(prodItem.id)
-    })
-    prodItemPriceEl.addEventListener('click', async e => {
+    prodItemEl.addEventListener('click', e => {
+      document.body.classList.add('loading')
       e.preventDefault()
       drawProdDetail(prodItem.id)
     })
@@ -265,6 +266,7 @@ async function drawProdList(category) {
   rootEl.textContent = ''
   drawCategoryContainer()
   rootEl.appendChild(frag)
+  document.body.classList.remove('loading')
 }
 
 async function drawProdDetail(prodId) {
@@ -273,7 +275,9 @@ async function drawProdDetail(prodId) {
   // 2. 요소 선택
   const buyFormEl = frag.querySelector('.prod-buy-form')
   // 3. 필요한 데이터 불러오기
+  document.body.classList.add('loading')
   const {data: prodDetail} = await api.get(`/products?id=${prodId}&_embed=options`)
+  document.body.classList.remove('loading')
   // 4. 내용 채우기
   for(const itemDetail of prodDetail) {
     const detailImgEl = frag.querySelector('.prod-detail-img')
@@ -325,6 +329,7 @@ async function drawProdDetail(prodId) {
     // 장바구니 추가 버튼 눌렀을 때 이벤트 발생
     bucketButtonEl.addEventListener('click', async e => {
       e.preventDefault()
+      document.body.classList.add('loading')
       if(!localStorage.getItem('token')) {
         confirm('로그인 후 사용할 수 있는 기능입니다. \n로그인 하시겠습니까?') && drawLoginForm()
       } else {
@@ -370,6 +375,7 @@ async function drawProdDetail(prodId) {
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = ''
   rootEl.appendChild(frag)
+  document.body.classList.remove('loading')
 }
 
 async function drawBucketList() {
@@ -489,6 +495,7 @@ async function drawBucketList() {
   // 5. 이벤트 리스너 등록하기
   // 장바구니에서 주문 버튼 클릭 하면
   orderButtonEl.addEventListener('click', async e => {
+    document.body.classList.add('loading')
     // '주문' 객체를 먼저 만들고 나서
     const {data: {id: orderId}} = await api.post('/orders', {
       orderTime: Date.now() // 현재 시각을 나타내는 정수
@@ -521,6 +528,7 @@ async function drawBucketList() {
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = ''
   rootEl.appendChild(frag)
+  document.body.classList.remove('loading')
 }
 
 async function drawOrderList() {
@@ -605,6 +613,7 @@ async function drawOrderList() {
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = ''
   rootEl.appendChild(frag)
+  document.body.classList.remove('loading')
 }
 
 // 페이지 이동 버튼 이벤트 리스너
