@@ -125,30 +125,48 @@ body.loading::after {
     margin-bottom: 20px;
   }
   .input-container {
+    width: 80%;
+    text-align: center;
+    .id-container,
+    .pw-container,
+    .pw-confirm-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
     .input {
       border: 1px solid #ccc;
       width: 100%;
       height: 50px;
       padding: 10px;
       margin-bottom: 20px;
-      font-size: 20px;
+      font-size: 17px;
+      background-color: #fff;
+      outline: none;
+    }
+    .input:focus {
+      background-color: #fff8dc;
     }
     .login-button,
     .register-button {
       cursor: pointer;
-      width: 100%;
+      outline: none;
+      width: 30%;
       height: 40px;
-      background-color: #600f1e;
+      background-color: red;
       color: #fff;
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: 500;
     }
   }
 }
 .register-btn-container {
+  // 일단 화면에서 빼놓기 위한 display: none;
+  display: none;
   width: 50%;
   margin: 5px auto;
   text-align: right;
-  // border: 1px solid black;
+  border: 1px solid black;
   .register-button {
     cursor: pointer;
     padding: 5px 0 0 0;
@@ -197,6 +215,8 @@ body.loading::after {
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 0px 0px 0px 0px #999;
+    transition: box-shadow 0.3s;
     .prod-img-container {
     height: 330px;
       .prod-img {
@@ -221,6 +241,9 @@ body.loading::after {
         color: #ff483b;
       }
     }
+  }
+  .prod-item:hover {
+    box-shadow: 2px 2px 2px 2px #ccc;
   }
 }
 
@@ -264,6 +287,7 @@ body.loading::after {
       }
       .select-option {
         cursor: pointer;
+        outline: none;
         border: 1px solid #ccc;
         width: 50%;
         font-size: 20px;
@@ -271,6 +295,7 @@ body.loading::after {
       }
       .minus, .plus{
         cursor: pointer;
+        outline: none;
         width: 30px;
         border: 1px solid #ccc;
         background-color: #eee;
@@ -278,6 +303,7 @@ body.loading::after {
         padding: 3px 5px;
       }
       .select-quantity {
+        outline: none;
         width: 60px;
         border: 1px solid #ccc;
         font-size: 20px;
@@ -374,7 +400,7 @@ body.loading::after {
     justify-content: center;
     align-items: center;
     list-style: none;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 3px ridge #ccc;
     padding: 10px 0;
     .cell {
       text-align: center;
@@ -410,6 +436,7 @@ body.loading::after {
     background-color: red;
     color: $main-text-color;
     border: 1px solid #ccc;
+    outline: none;
   }
 }
 
@@ -450,6 +477,8 @@ body.loading::after {
   }
   .bucket-quantity {
     .minus, .plus{
+      cursor: pointer;
+      outline: none;
       width: 20px;
       border: 1px solid #ccc;
       background-color: #eee;
@@ -458,6 +487,7 @@ body.loading::after {
       text-align: center;
     }
     .select-bucket-quantity {
+      outline: none;
       width: 30px;
       border: 1px solid #ccc;
       font-size: 16px;
@@ -490,7 +520,6 @@ body.loading::after {
     display: grid;
     grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
     align-items: center;
-    border-bottom: 1px solid #ccc;
     .cell {
       text-align: center;
     }
@@ -524,11 +553,13 @@ body.loading::after {
     font-size: 18px;
     font-weight: 600;
     padding: 10px 0;
+    border-bottom: 3px ridge #ccc;
   }
   .order-item {
     font-size: 16px;
     font-weight: 400;
     padding: 10px 0;
+    border-bottom: 1px solid #ccc;
   }
 }
 
@@ -549,6 +580,7 @@ body.loading::after {
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: #777;
     .btn-title {
       font-size: 13px;
       margin-top: 5px;
@@ -557,7 +589,7 @@ body.loading::after {
   }
   .cart-btn:hover,
   .history-btn:hover {
-    color: #555;
+    color: #000;
   }
 }
 .page-move-btn.hidden {
@@ -565,7 +597,8 @@ body.loading::after {
 }
 
 .root {
+  // border: 1px solid black;
   width: 1024px;
-  margin: 20px auto;
+  margin: 0px auto 50px auto;
 }
 

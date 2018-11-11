@@ -158,7 +158,6 @@ async function drawLoginForm() {
     rootEl.textContent = ''
     drawBgContainerAuthorized()
     drawProdList()
-    document.querySelector('.page-move-btn').classList.remove('hidden')
     document.body.classList.remove('loading')
   })
   // 페이지 이동 버튼 영역에 hidden 클래스 추가(감추기)
@@ -269,6 +268,7 @@ async function drawProdList(category) {
   rootEl.textContent = ''
   drawCategoryContainer()
   rootEl.appendChild(frag)
+  document.querySelector('.page-move-btn').classList.remove('hidden')
   document.body.classList.remove('loading')
 }
 
@@ -344,11 +344,13 @@ async function drawProdDetail(prodId) {
           buyFormEl.reportValidity()
           return
         }
+        // 기존 장바구니에 같은 제품, 같은 옵션인 경우를 거르기 위한 get 메소드 요청
         const {data: cartItem} = await api.get('/cartItems', {
           params: {
             ordered: false
           }
         })
+        // 장바구니에 이미 같은 상품이 있으면 컨펌 띄워서 확인하고, 아니면 장바구니에 담는다.
         if(cartItem.length !== 0) {
           for(let i=0; i < cartItem.length; i++) {
             if(cartItem[i].optionId === parseInt(selectOptionEl.value)) {
@@ -377,6 +379,35 @@ async function drawProdDetail(prodId) {
         }
       }
     })
+
+    // 바로 구매하기 버튼을 눌렀을 때 이벤트
+    buyButtonEl.addEventListener('click', async e => {
+      e.preventDefault()
+      document.body.classList.add('loading')
+      if(!localStorage.getItem('token')) {
+        confirm('로그인 후 사용할 수 있는 기능입니다. \n로그인 하시겠습니까?') && drawLoginForm()
+      } else {  // 로그인 된 상태라면(토큰이 있는 상태)
+        // form option validation
+        if(!buyFormEl.elements.option.value) {
+          buyFormEl.reportValidity()
+          return
+        }
+        // '주문' 객체를 하나 만들어주고
+        const {data: {id: orderId}} = await api.post('/orders', {
+          orderTime: Date.now() // 현재 시각을 나타내는 정수
+        })
+        // 주문내역을 그릴때 사용할 정보를 넣어서 장바구니에 담는다.
+        const res = await api.post('/cartItems', {
+          optionId: parseInt(selectOptionEl.value),
+          quantity: parseInt(prodQuanEl.value),
+          ordered: true,
+          orderId
+        })
+        // 주문내역을 그린다.
+        drawOrderList()
+      }
+    })
+
   }
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
