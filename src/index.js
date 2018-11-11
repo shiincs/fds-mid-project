@@ -275,12 +275,15 @@ async function drawProdList(category) {
 async function drawProdDetail(prodId) {
   // 1. 템플릿 복사
   const frag = document.importNode(templates.prodDetail, true)
+
   // 2. 요소 선택
   const buyFormEl = frag.querySelector('.prod-buy-form')
+
   // 3. 필요한 데이터 불러오기
   document.body.classList.add('loading')
   const {data: prodDetail} = await api.get(`/products?id=${prodId}&_embed=options`)
   document.body.classList.remove('loading')
+
   // 4. 내용 채우기
   for(const itemDetail of prodDetail) {
     const detailImgEl = frag.querySelector('.prod-detail-img')
@@ -339,6 +342,7 @@ async function drawProdDetail(prodId) {
       document.body.classList.add('loading')
       if(!localStorage.getItem('token')) {
         confirm('로그인 후 사용할 수 있는 기능입니다. \n로그인 하시겠습니까?') && drawLoginForm()
+        document.body.classList.remove('loading')
       } else {
         if(!buyFormEl.elements.option.value) {
           buyFormEl.reportValidity()
@@ -378,7 +382,7 @@ async function drawProdDetail(prodId) {
           drawBucketList()
         }
       }
-    })
+    })  // end of bucketBtn event
 
     // 바로 구매하기 버튼을 눌렀을 때 이벤트
     buyButtonEl.addEventListener('click', async e => {
@@ -386,6 +390,7 @@ async function drawProdDetail(prodId) {
       document.body.classList.add('loading')
       if(!localStorage.getItem('token')) {
         confirm('로그인 후 사용할 수 있는 기능입니다. \n로그인 하시겠습니까?') && drawLoginForm()
+        document.body.classList.remove('loading')
       } else {  // 로그인 된 상태라면(토큰이 있는 상태)
         // form option validation
         if(!buyFormEl.elements.option.value) {
@@ -406,14 +411,15 @@ async function drawProdDetail(prodId) {
         // 주문내역을 그린다.
         drawOrderList()
       }
-    })
+    })  // end of buyBtn event
+  } // end of prodDetail loop
 
-  }
   // 5. 이벤트 리스너 등록하기
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = ''
   rootEl.appendChild(frag)
   document.body.classList.remove('loading')
+  window.scrollTo(0, 0)
 }
 
 async function drawBucketList() {
@@ -424,6 +430,7 @@ async function drawBucketList() {
   const totalPriceEl = frag.querySelector('.total-price')
   const orderButtonEl = frag.querySelector('.all-buy-btn')
   // 3. 필요한 데이터 불러오기
+  document.body.classList.add('loading')
   const {data: cartItems} = await api.get('/cartItems', {
     params: {
       ordered: false,
@@ -464,8 +471,6 @@ async function drawBucketList() {
     bucketPriceEl.textContent = product.price.toLocaleString() + '원'
     bucketPriceSumEl.textContent = (cartItem.quantity * product.price).toLocaleString() + '원'
     totalPrice += (cartItem.quantity * product.price)
-    // totalPrice += (bucketQuantityEl.value * product.price)
-
 
     // 5. 이벤트 리스너 등록하기
     // 변화하는 수량을 저장하기 위한 flag 변수 및 초기화
@@ -498,7 +503,6 @@ async function drawBucketList() {
         const res = await api.patch(`/cartItems/${cartItem.id}`, {
           quantity: parseInt(bucketQuantityEl.value)
         })
-        console.log(res)
         bucketPriceSumEl.textContent = (product.price * bucketQuantityEl.value).toLocaleString() + '원'
         totalPrice -= product.price
         totalPriceEl.textContent = totalPrice.toLocaleString() + '원'
@@ -512,7 +516,6 @@ async function drawBucketList() {
       const res = await api.patch(`/cartItems/${cartItem.id}`, {
         quantity: parseInt(bucketQuantityEl.value)
       })
-      console.log(res)
       bucketPriceSumEl.textContent = (product.price * bucketQuantityEl.value).toLocaleString() + '원'
       totalPrice += product.price
       totalPriceEl.textContent = totalPrice.toLocaleString() + '원'
@@ -561,8 +564,6 @@ async function drawBucketList() {
     drawOrderList()
   })
 
-
-
   // 6. 템플릿을 문서에 삽입
   rootEl.textContent = ''
   rootEl.appendChild(frag)
@@ -576,6 +577,7 @@ async function drawOrderList() {
   const orderListEl = frag.querySelector('.order-list')
   // 3. 필요한 데이터 불러오기
   // cartItems와 연결된 orders에 get 요청을 보내서 orders 데이터를 받아온다.
+  document.body.classList.add('loading')
   const {data: cartItems} = await api.get('/cartItems', {
     params: {
       ordered: true,
@@ -584,7 +586,6 @@ async function drawOrderList() {
       _order: 'desc'
     }
   })
-  console.log(cartItems)
 
   const params = new URLSearchParams()
   cartItems.forEach(cartItem => params.append('id', cartItem.optionId))
@@ -593,7 +594,6 @@ async function drawOrderList() {
   const { data: optionList } = await api.get('/options', {
     params
   })
-  console.log(optionList)
 
   // unixTime인 orderTime을 orderDate로 바꿔준다.
   function convertOrderDate(orderTime) {
@@ -602,7 +602,7 @@ async function drawOrderList() {
     let year = unixTime.getFullYear()
     let month = (months[unixTime.getMonth()].toString().length === 1)? ('0' + months[unixTime.getMonth()]) : months[unixTime.getMonth()]
     let date = (unixTime.getDate().toString().length === 1)? ('0' + unixTime.getDate()) : unixTime.getDate()
-    console.log(year, month, date)
+
     const orderDate = `${year}-${month}-${date}`
     return orderDate
   }
@@ -632,7 +632,6 @@ async function drawOrderList() {
     // 3. 필요한 데이터 불러오기
     // 4. 내용 채우기
     const option = optionList.find(item => item.id === cartItem.optionId)
-    console.log(option)
 
     orderDateEl.textContent = convertOrderDate(cartItem.order.orderTime)
     orderTimeEl.textContent = convertOrderTime(cartItem.order.orderTime)
@@ -663,7 +662,6 @@ historyBtnEl.addEventListener('click', e => {
   e.preventDefault()
   localStorage.getItem('token')? drawOrderList() : confirm('로그인 후 사용할 수 있는 기능입니다. \n로그인 하시겠습니까?') && drawLoginForm()
 })
-
 
 // 로그인 확인을 위한 토큰 변수 선언 및 초기화
 const token = localStorage.getItem('token')

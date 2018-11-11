@@ -10,6 +10,7 @@
 </head>
 <body>
   <!-- 템플릿을 이곳에 작성해주세요 -->
+  <!-- Header(No Token) -->
   <template id="bg-container">
     <nav class="nav">
       <ul class="btn-container">
@@ -23,6 +24,7 @@
     </div>
   </template>
 
+  <!-- Header(Token) -->
   <template id="bg-container-authorized">
     <nav class="nav-authorized">
       <ul class="btn-container">
@@ -35,6 +37,7 @@
     </div>
   </template>
 
+  <!-- Category Bar -->
   <template id="category-container">
     <ul class="category-container">
       <li class="button all">전체</li>
@@ -49,6 +52,7 @@
     </ul>
   </template>
 
+  <!-- Login Form -->
   <template id="login-form">
     <form class="login-form">
       <h1 class="login-title">로그인</h1>
@@ -69,6 +73,7 @@
     </div>
   </template>
 
+  <!-- Register Form -->
   <template id="register-form">
     <form class="register-form">
       <h1 class="register-title">회원가입</h1>
@@ -90,12 +95,14 @@
     </form>
   </template>
 
+  <!-- Product List -->
   <template id="prod-list">
     <div class="prod-list">
 
     </div>
   </template>
 
+  <!-- Product Items -->
   <template id="prod-item">
     <div class="prod-item">
       <div class="prod-img-container">
@@ -108,6 +115,7 @@
     </div>
   </template>
 
+  <!-- Product Detail -->
   <template id="prod-detail">
     <div class="prod-detail">
       <div class="prod-detail-container">
@@ -155,6 +163,7 @@
     </div>
   </template>
 
+  <!-- Bucket List(=== Cart) -->
   <template id="bucket-list">
     <h1 class="bucket-title">장바구니 목록</h1>
     <div class="bucket-list">
@@ -177,6 +186,7 @@
     </div>
   </template>
 
+  <!-- Bucket Items(=== CartItems) -->
   <template id="bucket-item">
     <ul class="bucket-item">
       <li class="cell">
@@ -202,6 +212,7 @@
     </ul>
   </template>
 
+  <!-- Order History List -->
   <template id="order-list">
     <h1 class="order-title">구매 내역</h1>
     <div class="order-list">
@@ -215,6 +226,7 @@
     </div>
   </template>
 
+  <!-- Order History Items -->
   <template id="order-item">
     <ul class="order-item">
       <li class="cell order-date-time">
@@ -233,13 +245,18 @@
     </ul>
   </template>
 
-  <!-- root area -->
+  <!-- fixed root area -->
+  <!-- Header area -->
   <header class="header"></header>
+  <!-- ToCartBtn + ToHistoryBtn -->
   <div class="page-move-btn">
     <button class="cart-btn"><i class="fas fa-shopping-cart"></i><span class="btn-title">장바구니</span></button>
     <button class="history-btn"><i class="far fa-list-alt"></i><span class="btn-title">구매내역</span></button>
   </div>
+  <!-- Root area -->
   <div class="root"></div>
+
+  <!-- Call Script -->
   <script src="./index.js"></script>
 </body>
 </html>

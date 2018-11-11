@@ -41,7 +41,7 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
 }
 
-// loading indicator
+/* loading indicator */
 body.loading::after {
   display: block;
   position: fixed;
@@ -60,7 +60,7 @@ body.loading::after {
   display: block
 }
 
-// content
+/* Header === nav + logo img */
 .header {
   width: 100%;
   .nav,
@@ -111,7 +111,7 @@ body.loading::after {
   }
 }
 
-// login page
+/* Login + Regsiter Form */
 .login-form,
 .register-form {
   display: flex;
@@ -181,7 +181,7 @@ body.loading::after {
   }
 }
 
-// prod-list page
+/* Category bar in Product List */
 .category-container {
   margin-bottom: 30px;
   border-bottom: 1px solid #000;
@@ -201,6 +201,7 @@ body.loading::after {
     font-weight: 700;
   }
 }
+/* Product List */
 .prod-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -247,7 +248,7 @@ body.loading::after {
   }
 }
 
-// prod-detail page
+/* Product Detail */
 .prod-detail {
   display: flex;
   flex-direction: column;
@@ -389,6 +390,7 @@ body.loading::after {
   }
 }
 
+/* Bucket List */
 .bucket-list {
   border: 1px solid #ccc;
   margin-top: 10px;
@@ -439,9 +441,7 @@ body.loading::after {
     outline: none;
   }
 }
-
-
-// 장바구니 페이지
+/* Bucket Item */
 .bucket-item {
   width: 100%;
   display: grid;
@@ -495,7 +495,6 @@ body.loading::after {
       padding: 3px 0px;
     }
   }
-
   .delete-cell {
     cursor: pointer;
     width: 40px;
@@ -509,7 +508,7 @@ body.loading::after {
   }
 }
 
-// 주문내역 페이지
+/* Order History List */
 .order-list {
   width: 100%;
   border: 1px solid #ccc;
@@ -563,7 +562,7 @@ body.loading::after {
   }
 }
 
-// root page
+/* Page Move Btns === ToBucketList + ToOrderHistoryList */
 .page-move-btn {
   width: 1024px;
   margin: 30px auto 0 auto;
@@ -596,6 +595,7 @@ body.loading::after {
   display: none;
 }
 
+/* Root */
 .root {
   // border: 1px solid black;
   width: 1024px;
