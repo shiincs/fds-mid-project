@@ -120,6 +120,9 @@ function drawCategoryContainer() {
   categoryEvent(allEl)
   categoryEvent(capEl, 'cap')
   categoryEvent(uniformEl, 'uniform')
+  categoryEvent(markingEl, 'marking')
+  categoryEvent(fashionEl, 'fashion')
+  categoryEvent(cheerEl, 'cheer')
   // 6. 템플릿을 문서에 삽입
   rootEl.appendChild(frag)
 }
@@ -292,10 +295,14 @@ async function drawProdDetail(prodId) {
     const bucketButtonEl = frag.querySelector('.bucket-btn')
     const buyButtonEl = frag.querySelector('.buy-btn')
 
-    frag.querySelectorAll('.option').forEach((optionEl, index) => {
-      optionEl.textContent = itemDetail.options[index].title
-      optionEl.value = itemDetail.options[index].id
+    itemDetail.options.forEach((optionItem) => {
+      const newOption = document.createElement('option')
+      newOption.classList.add('option')
+      newOption.textContent = optionItem.title
+      newOption.value = optionItem.id
+      selectOptionEl.appendChild(newOption)
     })
+
     detailImgEl.src = itemDetail.mainImgUrl
     detailDescriptionEl.src = itemDetail.detailImgUrls[0]
     detailTitleEl.value = itemDetail.title
